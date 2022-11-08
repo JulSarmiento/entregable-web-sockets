@@ -10,7 +10,7 @@ const http = new HttpServer(app);
 const io = new IoServer(http);
 
 const messages = [];
-const producst = [];
+const products = [];
 
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
@@ -29,6 +29,12 @@ io.on('connection', (socket) => {
   socket.on('NEW_MESSAGE_TO_SERVER', data => {
     messages.push(data);
     io.sockets.emit('NEW_MESSAGE_FROM_SERVER', data)
+  })
+
+  socket.emit('UPDATE_PRODUCTS', products);
+  socket.on('NEW_PRODCUT_TO_SERVER', (data) => {
+    products.push(data);
+    io.sockets.emit('NEW_PRODUCTS_FROM_SERVER', data);
   })
 })
 

@@ -44,7 +44,7 @@
       <div class="row">
         <div class="col">
           <h1>Mazuzoe Storet</h1>
-          <a href="/products/seeProducts">Ver Productos</a>
+          <a href="/products">Ver Productos</a>
         </div>
       </div>
 
@@ -71,9 +71,10 @@
       </div>
     
       <div class="row">
-        <div class="col">
+        <div class="col form-styles">
+
           <h2>Registrar de Producto:</h2>
-          <form  method="GET" action="/products" class="form-styles">
+          <form  method="GET" action="/" >
             <div class="mb-3">
               <label for="productName" class="form-label">Nombre del producto</label>
               <input type="text" name="productName" class="form-control" id="productName" aria-describedby="emailHelp" required>
@@ -86,11 +87,32 @@
               <label for="thumbnail" class="form-label">Link con la imagen del producto</label>
               <input type="text" name="thumbnail" id="thumbnail" class="form-control" id="exampleInputPassword1" required>
             </div>
-            <button type="submit" class="btn btn-primary">Agregar Producto</button>
+            <button type="submit" id="product-btn" class="btn btn-primary">Agregar Producto</button>
           </form>
-        </div>
-      </div>
 
+          <div class="container table-config text-center">
+            <div class="row">
+              <div class="col" id="table">
+      
+                  <table class="table table-hover table-dark">   
+      
+                    <thead>
+                      <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Foto</th>
+                      </tr>
+                    </thead>
+      
+                    <tbody id="products-table">   
+                    </tbody>
+          
+                  </table>    
+              </div>
+            </div>
+        </div>
+        
+      </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/main.js"></script>

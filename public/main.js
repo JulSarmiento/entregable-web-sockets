@@ -1,7 +1,11 @@
 const socket = io();
-const btn = document.querySelector('#send-btn');
+const chatBtn = document.querySelector('#send-btn');
+const productBtn = document.querySelector('#product-btn');
 const list = document.querySelector('#chat-box');
-const messages = [];
+const table = document.querySelector('#table');
+const tableRows = document.querySelector('#products-table');
+let messages = [];
+let products = [];
 
 function sendNewMessage(){
   const username = document.querySelector('#username').value;
@@ -21,6 +25,28 @@ function sendNewMessage(){
   document.querySelector('#message').value = '';
 }
 
+function sendNewProduct(){
+  const productName = document.querySelector('#productName').value;
+  const productPrice = document.querySelector('#productPrice').value;
+  const thumbnail = document.querySelector('#thumbnail').value;
+
+  if(!productName || !productPrice || !thumbnail) {
+    return
+  }
+
+  const productObject = {
+    productName,
+    productPrice,
+    thumbnail
+  };
+
+  socket.emit('NEW_PRODCUT_TO_SERVER', productObject);
+  document.querySelector('#productName').value = '';
+  document.querySelector('#productPrice').value = '';
+  document.querySelector('#thumbnail').value = '';
+  
+}
+
 function printMessages(messages) {
   list.innerHTML = '';
   if(messages.length  !== 0) {
@@ -31,18 +57,58 @@ function printMessages(messages) {
 
 }
 
-btn.addEventListener('click', (e) => {
+function printProducts(products) {
+  if(products.length === 0) {
+    table.innerHTML = `            
+      <div class="alert alert-warning" role="alert">
+        No hay productos para mostrar.
+      </div>
+    `
+  }
+
+  tableRows.innerHTML = '';
+  if(products.length  !== 0) {
+    products.forEach(element => {
+      tableRows.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td>${element.productName}</td>
+          <td>${new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(element.productPrice)}</td>
+          <td><img src="${element.thumbnail}" height="40" width="40" alt=""></td>
+        </tr>
+      `)
+    });
+  }
+
+}
+
+chatBtn.addEventListener('click', (e) => {
   e.preventDefault();
   sendNewMessage();
 });
 
+productBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  sendNewProduct();
+})
+
 socket.on('UPDATE_DATA', (data) => {
   console.log('Estoy recibiendo data', data);
-  message = data;
+  messages = data;
   printMessages(data);
 })
 
 socket.on('NEW_MESSAGE_FROM_SERVER', (data) => {
   messages.push(data);
   printMessages(messages)
+})
+
+socket.on('UPDATE_PRODUCTS', (data) => {
+  console.log('Estoy recibiendo data', data);
+  products = data;
+  printProducts(products);
+})
+
+socket.on('NEW_PRODUCTS_FROM_SERVER', (data) => {
+  products.push(data);
+  printProducts(products);
 })
