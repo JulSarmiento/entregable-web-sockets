@@ -1,43 +1,31 @@
+const readFiles = require("../utilities/readFile");
+const saveFiles = require("../utilities/saveFiles");
+
 class Container {
-  constructor(products = []){
-    this.products = products;
-  };
-
-  saveProduct(product) {
-    product.id = this.products.length > 0 ? this.products[this.products.length -1 ].id + 1 : 1;
-    this.products.push(product);
-    console.log('Product id: ', product.id)
-    return product.id
-  };
-
-  getProducts() {
-    return this.products
-  };
-
-  getById(id) {
-    return this.products.find(product => product.id == id);
+  constructor(products) {
+    this.filename = `db/${products}.txt`;
   }
 
-  getRandom(){
-    const random = Math.round(Math.random() * this.products.length);
-    return this.getById(random);
+  async saveProduct(product) {
+    const values = await this.getAll();
+   
+    try {
+      saveFiles(this.filename, [...values, product]);
+      return product;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  updateProduct(productId, data) {
-    const current = this.getById(productId);
-    const currentIndex = this.products.indexOf(current);
-    this.products[currentIndex] = {...current, ...data};
-    return this.products[currentIndex];
-  };
-
-  deleteAll() {
-    return this.products = [];
-  };
-
-  deleteById(id) {
-    this.products = this.products.filter(product => product.id != id);
-    return this.products
+  async getAll() {
+    try {
+      const products = await readFiles(this.filename);
+      console.log("products array in constructor", products);
+      return products;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 
-module.exports = Container
+module.exports = Container;

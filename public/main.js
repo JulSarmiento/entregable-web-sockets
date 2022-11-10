@@ -4,11 +4,13 @@ const productBtn = document.querySelector('#product-btn');
 const list = document.querySelector('#chat-box');
 const table = document.querySelector('#table');
 const tableRows = document.querySelector('#products-table');
+const noProducst = document.querySelector('#no-product')
+
 let messages = [];
 let products = [];
 
 function sendNewMessage(){
-  const username = document.querySelector('#username').value;
+  const username = document.querySelector('#email').value;
   const message = document.querySelector('#message').value;
 
   if(!message || !username) {
@@ -40,7 +42,7 @@ function sendNewProduct(){
     thumbnail
   };
 
-  socket.emit('NEW_PRODCUT_TO_SERVER', productObject);
+  socket.emit('NEW_PRODUCT_TO_SERVER', productObject);
   document.querySelector('#productName').value = '';
   document.querySelector('#productPrice').value = '';
   document.querySelector('#thumbnail').value = '';
@@ -51,23 +53,18 @@ function printMessages(messages) {
   list.innerHTML = '';
   if(messages.length  !== 0) {
     messages.forEach(element => {
-      list.insertAdjacentHTML('beforeend', `<li> <span class="username" >${element.username}</span> (<span class="timestamp">${element.timestamp}</span>): <span class="message-text">${element.message}</span></li>`)
+      list.insertAdjacentHTML('beforeend', `<li class="list-group-item mb-2"> <span class="username" ><b>${element.username}</b></span> (<span class="timestamp">${element.timestamp}</span>): <span class="message-text"><i>${element.message}</i></span></li>`)
     });
   }
 
 }
 
-function printProducts(products) {
-  if(products.length === 0) {
-    table.innerHTML = `            
-      <div class="alert alert-warning" role="alert">
-        No hay productos para mostrar.
-      </div>
-    `
-  }
-
-  tableRows.innerHTML = '';
-  if(products.length  !== 0) {
+function printProducts() {
+  console.log('products in printProducts', products)
+  if(products.length > 0) {
+    noProducst.style.display = 'none'
+    table.style.display = 'block'
+    tableRows.innerHTML = '';
     products.forEach(element => {
       tableRows.insertAdjacentHTML('beforeend', `
         <tr>
@@ -77,8 +74,11 @@ function printProducts(products) {
         </tr>
       `)
     });
-  }
+  } else {
+      table.style.display = 'none'
+      noProducst.style.display = 'block'
 
+  }
 }
 
 chatBtn.addEventListener('click', (e) => {
@@ -92,23 +92,26 @@ productBtn.addEventListener('click', (e) => {
 })
 
 socket.on('UPDATE_DATA', (data) => {
-  console.log('Estoy recibiendo data', data);
+  console.log('Estoy recibiendo mensajes', data);
   messages = data;
-  printMessages(data);
+  printMessages(messages);
 })
 
 socket.on('NEW_MESSAGE_FROM_SERVER', (data) => {
+  console.log('NEW_MESSAGE_FROM_SERVER > ', data, messages);
   messages.push(data);
   printMessages(messages)
 })
 
 socket.on('UPDATE_PRODUCTS', (data) => {
-  console.log('Estoy recibiendo data', data);
   products = data;
+  console.log('Estoy recibiendo productos', products);
   printProducts(products);
 })
 
 socket.on('NEW_PRODUCTS_FROM_SERVER', (data) => {
+  console.log('data en main.js', data);
   products.push(data);
-  printProducts(products);
+  console.log('products en main.js', products);
+  printProducts();
 })

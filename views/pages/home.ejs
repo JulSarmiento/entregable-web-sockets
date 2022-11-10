@@ -19,6 +19,11 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        background-color: rgb(212, 208, 208);
+      }
+
+      .chat-title{
+        color: blue;
       }
 
       #chat-box{
@@ -30,7 +35,7 @@
       }
 
       .timestamp{
-        color: red;
+        color: brown;
       }
 
       .message-text{
@@ -51,15 +56,18 @@
       <div class="row">
         <div class="col ">          
           <div class=" form-styles ">
-            <h2>Chat</h2>
-            <div>
-              <ul id="chat-box"></ul>
-            </div>
+            <h2 class="chat-title">Centro de Mensajes</h2>
+
             <form  method="GET" action="/" >
               <div class="mb-3">
-                <label for="username" class="form-label">Nombre del usuario</label>
-                <input type="text" name="username" class="form-control" id="username" aria-describedby="emailHelp" required>
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" required>
               </div>
+
+              <div class="list-group list-group-flush ">
+                <ul id="chat-box"></ul>
+              </div>
+
               <div class="mb-3">
                 <label for="message" class="form-label">Mensaje:</label>
                 <input type="text" name="message" class="form-control" id="message" aria-describedby="emailHelp" required>
@@ -73,7 +81,7 @@
       <div class="row">
         <div class="col form-styles">
 
-          <h2>Registrar de Producto:</h2>
+          <h2 class="chat-title">Ingrese Productos de Producto:</h2>
           <form  method="GET" action="/" >
             <div class="mb-3">
               <label for="productName" class="form-label">Nombre del producto</label>
@@ -94,22 +102,26 @@
             <div class="row">
               <div class="col" id="table">
       
-                  <table class="table table-hover table-dark">   
-      
-                    <thead>
-                      <tr>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Foto</th>
-                      </tr>
-                    </thead>
-      
-                    <tbody id="products-table">   
-                    </tbody>
-          
-                  </table>    
+                <table class="table table-hover table-dark">         
+                  <thead>
+                    <tr>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Precio</th>
+                      <th scope="col">Foto</th>
+                    </tr>
+                  </thead>      
+                  <tbody id="products-table">  
+                      
+                  </tbody>          
+                </table>    
+                  
               </div>
             </div>
+          </div>
+
+          <div class="alert alert-warning" id="no-product" role="alert">
+            No hay productos para mostrar.
+          </di
         </div>
         
       </div>

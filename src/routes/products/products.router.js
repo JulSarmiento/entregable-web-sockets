@@ -4,7 +4,7 @@ const Container = require('../../../classes/Container.class');
 
 const db = [];
 
-const products = new Container(db);
+const messages = new Container(db);
 
 // get home page
 router.get('/', (_req, res, next) => {
@@ -18,9 +18,9 @@ router.get('/', (_req, res, next) => {
 
 // get all route
 router.get('/products', (_req, res, next) => {
-  console.log(products)
+  console.log(messages)
   try {
-    res.render('pages/products', { products : products.getProducts()})
+    res.render('pages/products', { products : messages.getAll()})
   } catch (err) {
     next(err);
   };
